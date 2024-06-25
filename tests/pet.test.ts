@@ -1,6 +1,9 @@
 import { PetController } from './api/controller/pet.controller';
 import {strict as assert} from 'assert'; 
-//mport assert, { deepEqual } from 'assert';
+//import assert, { deepEqual } from 'assert';
+import { definitions } from '../.temp/types'
+import { operations } from '../.temp/types'
+
 
 
 const pet = new PetController()
@@ -21,14 +24,14 @@ describe('User can', function () {
      assert(data.length > 0) 
      data = await pet.findByStatus(['available', 'pending'])
      assert(data.length > 0)
-     assert(data.some((pet: any) => pet.status == 'available'))
-     assert(data.some((pet: any) => pet.status == 'pending'))
-     assert(!data.some((pet: any) => pet.status == 'sold'))
+     assert(data.some(pet => pet.status == 'available'))
+     assert(data.some(pet => pet.status == 'pending'))
+     assert(!data.some(pet => pet.status == 'sold'))
 
   })
 
   it('Add, Update or Delete', async function () {
-    const petToCreate = {
+    const petToCreate: Omit<definitions['Pet'], 'id'> = {
       "category": {
           "id": 0,
           "name": "string"
@@ -46,41 +49,42 @@ describe('User can', function () {
         "status": "available"
       }
       const addedPet = await pet.addNew(petToCreate)
-      console.log('ID added:  ', addedPet.id  );
+      //console.log('ID added:  ', addedPet.id  );
       
       assert.deepEqual(addedPet, {
         ... petToCreate, 
         id: addedPet.id
       }, `Error: Created Pet data does not match to expected`)
+      assert(typeof(addedPet.id) == 'number', 'id must be present in response')
 
       let foundAddedPet = await pet.getById(addedPet.id) 
-      console.log("foundAddedPet: ", foundAddedPet)
+      //console.log("foundAddedPet: ", foundAddedPet)
       assert.deepEqual(foundAddedPet, {
         ... petToCreate, 
         id: addedPet.id
       }, `Error: Found Pet data does not match to expected`)
 
-      let changedPet = {
+      let changedPet: definitions['Pet'] = {
         "id": addedPet.id,
         "category": {
           "id": 0,
-          "name": "string"
+          "name": "string2"
         },
-        "name": "Cat",
+        "name": "Cat2",
         "photoUrls": [
-          "https://test.com/image.jpg"
+          "https://test.com/image2.jpg"
         ],
         "tags": [
           {
-            "id": 0,
-            "name": "string"
+            "id": 1,
+            "name": "string2"
           }
         ],
-        "status": "available"
+        "status": "pending"
       }
 
       
-      console.log('changedPet: ', changedPet)
+      //console.log('changedPet: ', changedPet)
       const updatedPet = await pet.update(changedPet)
       console.log(updatedPet.id, "Updated pet ID")
 

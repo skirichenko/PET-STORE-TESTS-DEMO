@@ -21,8 +21,8 @@ export class JsonRequest {
         this.options.data = body
         return this
     }
-    public send() {
-        return axios<any>(this.options)
+    public send<T>() {
+        return axios<T>(this.options)
 
     }
 }
