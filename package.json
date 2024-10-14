@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/mocha": "^10.0.2",
     "@types/node": "^20.8.5",
+    "ajv": "^8.17.1",
     "axios": "^1.6.2",
     "chai": "^4.3.10",
     "got": "^14.0.0",
