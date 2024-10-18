@@ -1,8 +1,9 @@
 import { URLSearchParams } from 'url';
 import { JsonRequest } from '../request';
-import { definitions} from '../../../.temp/types';
-import { operations } from '../../../.temp/types';
-import { validate } from '../validator'
+import { definitions, operations } from '../../../.temp/types'
+//import { JsonRequest } from 'http-req-builder';
+import { loadAPISpec, validate } from '../validator';
+import { Name } from 'ajv';
 
 export class PetController {
     async getById(id: number | string) {
@@ -11,57 +12,13 @@ export class PetController {
                 .url(`http://localhost/v2/pet/${id}`)
                 .send<operations['getPetById']['responses']['200']['schema']>()
         ).data
-        const schema = {
-            "$id": "http://example.com/example.json",
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "category": {
-                    "type": "object",
-                    "properties": {
-                        "id": {
-                            "type": "integer"
-                        },
-                        "name": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "name": {
-                    "type": "string"
-                },
-                "photoUrls": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "integer"
-                            },
-                            "name": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        }
+        const apiSpec = await loadAPISpec();
+        // @ts-ignore
+        const schema = apiSpec.paths!['/pet/{petId}']!['get']!['responses']!['200']!['schema']
+        //console.log('SCHEMA!!!!!!!', schema)      
         validate(schema, body)
-
         return body
     }
-
     async findByStatus(status: string | string[]) {
         return(
             await new JsonRequest()
@@ -105,5 +62,3 @@ export class PetController {
             ).data
              }
 }
-
-
