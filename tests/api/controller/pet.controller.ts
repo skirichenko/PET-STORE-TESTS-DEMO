@@ -1,9 +1,7 @@
 import { URLSearchParams } from 'url';
-import { JsonRequest } from '../request';
 import { definitions, operations } from '../../../.temp/types'
-//import { JsonRequest } from 'http-req-builder';
 import { loadAPISpec, validate } from '../validator';
-import { Name } from 'ajv';
+import { JsonRequest } from 'http-req-builder';
 
 export class PetController {
     async getById(id: number | string) {
@@ -11,7 +9,7 @@ export class PetController {
             await new JsonRequest()
                 .url(`http://localhost/v2/pet/${id}`)
                 .send<operations['getPetById']['responses']['200']['schema']>()
-        ).data
+        ).body
         const apiSpec = await loadAPISpec();
         // @ts-ignore
         const schema = apiSpec.paths!['/pet/{petId}']!['get']!['responses']!['200']!['schema']
@@ -23,9 +21,9 @@ export class PetController {
         return(
             await new JsonRequest()
                 .url(`http://localhost/v2/pet/findByStatus`)
-                .urlSearchParams(new URLSearchParams({ status }))
+                .searchParams(new URLSearchParams({ status }))
                 .send<operations['findPetsByStatus']['responses']['200']['schema']>()
-        ).data
+        ).body
         
     }
 
@@ -37,7 +35,7 @@ export class PetController {
                     .body(pet)
                     //.send<operations['addPet']['responses']['200']['schema']>()
                     .send<operations['getPetById']['responses']['200']['schema']>()
-            ).data
+            ).body
         }
    
     async update(pet: definitions['Pet']) {
@@ -48,7 +46,7 @@ export class PetController {
                 .body(pet)
                 //.send<operations['updatePet']['responses']['200']['schema']>()
                 .send<operations['getPetById']['responses']['200']['schema']>()
-        ).data
+        ).body
     }
 
 
@@ -59,6 +57,6 @@ export class PetController {
                 .url(`http://localhost/v2/pet/${id}`)
                 .method('DELETE')
                 .send<definitions['ApiResponse']>()
-            ).data
+            ).body
              }
 }

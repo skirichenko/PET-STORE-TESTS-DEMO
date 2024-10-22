@@ -24,8 +24,21 @@ describe('Store', () =>{
         const inventoryWithSoldAdded = await store.getInventory()
         assert.equal(inventoryWithSoldAdded.sold , inventory.sold + 1, 'Sold value in inestory must increase by 1 ')
     
+
+    })
+   
+    it('allows to cteate an order and to see it', async function () {
+      const order = {
+        petId: 1,
+        quantity: 1,
+        shipDate: new Date().toISOString()
+      }
+      const placedOrder = await store.placeOrder(order)
+
+      
     })
 })
+    
     function petWithStatus(status: definitions['Pet']['status']) {
         return {
             "category": {
