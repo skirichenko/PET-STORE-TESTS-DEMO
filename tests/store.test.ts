@@ -34,6 +34,8 @@ describe('Store', () =>{
         shipDate: new Date().toISOString()
       }
       const placedOrder = await store.placeOrder(order)
+      await store.getOrderById(placedOrder.id)
+      //assert is done automaticaly by json schema verification
 
       
     })

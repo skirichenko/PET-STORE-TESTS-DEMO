@@ -1,7 +1,6 @@
 
 import Ajv from 'ajv';
 import SwaggerParser from "@apidevtools/swagger-parser";
-import { OpenAPIV2, OpenAPIV3 } from 'openapi-types';
 
 export async function loadAPISpec() {
     return SwaggerParser.dereference('http://localhost/v2/swagger.json')
